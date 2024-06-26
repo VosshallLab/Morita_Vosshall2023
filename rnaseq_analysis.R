@@ -258,6 +258,41 @@ gr_fc_plot <- plot_foldchange_ordered(grs,c(-2,2))
 ppk_fc_plot <- plot_foldchange_ordered(ppks,c(-2,2))
 trp_fc_plot <- plot_foldchange_ordered(trps,c(-2,2))
 
+#load neuromodulator gene list
+f <- paste0(path,"/figure7/neuromodulator_list.tsv")
+neuromodulator_genelist <- read_tsv(f)
+#neuropeptide receptors
+npr_list <- neuromodulator_genelist %>% filter(type == 'neuropeptide receptor')
+npr_dat <- full_dat[unique(npr_list$geneID),] %>% drop_na() %>% rownames_to_column("Row.names")
+npr_dat2 <- npr_dat
+npr_fc_plot <- plot_foldchange_ordered(npr_dat,c(-3,3))
+npr_fc_plot <- npr_fc_plot + scale_y_continuous(breaks = seq(-3,3,by=1))
+
+#neuropeptide
+np_list <- neuromodulator_genelist %>% filter(type == 'neuropeptide')
+np_dat <- full_dat[unique(np_list$geneID),] %>% drop_na() %>% rownames_to_column("Row.names")
+np_dat2 <- np_dat
+np_fc_plot <- plot_foldchange_ordered(np_dat,c(-3,3))
+np_fc_plot <- np_fc_plot + scale_y_continuous(breaks = seq(-3,3,by=1))
+
+#neurotransimitter biosynthesis genes
+nt_list <- neuromodulator_genelist %>% 
+  filter(!type %in% c('neuropeptide', 'neuropeptide receptor')) %>%
+  filter(!grepl('receptor',type))
+nt_dat <- full_dat[unique(nt_list$geneID),] %>% drop_na() %>% rownames_to_column("Row.names")
+nt_dat2 <- nt_dat
+nt_fc_plot <- plot_foldchange_ordered(nt_dat,c(-3,3))
+nt_fc_plot <- nt_fc_plot + scale_y_continuous(breaks = seq(-3,3,by=1))
+
+#neurotransimitter receptor genes
+ntr_list <- neuromodulator_genelist %>% 
+  filter(!type %in% c('neuropeptide', 'neuropeptide receptor')) %>%
+  filter(grepl('receptor',type))
+ntr_dat <- full_dat[unique(ntr_list$geneID),] %>% drop_na() %>% rownames_to_column("Row.names")
+ntr_dat2 <- ntr_dat
+ntr_fc_plot <- plot_foldchange_ordered(ntr_dat,c(-3,3))
+ntr_fc_plot <- ntr_fc_plot + scale_y_continuous(breaks = seq(-3,3,by=1))
+
 
 ##########
 #orco plot ---------------------------------------------------
